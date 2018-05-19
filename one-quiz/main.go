@@ -13,6 +13,9 @@ import (
 	"time"
 )
 
+//This file takes a CSV of the format `problem`,`answer`
+//and lets you play a timed quiz on the command line
+
 //Open the CSV file and read it into a Q:A map
 func prepareFile(file string) map[string]string {
 	csvFile, err := os.Open(file)
