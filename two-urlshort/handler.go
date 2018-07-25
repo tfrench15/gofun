@@ -1,7 +1,11 @@
 package urlshort
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+
+	"gopkg.in/yaml.v2"
 )
 
 // MapHandler will return an http.HandlerFunc (which also
@@ -17,15 +21,14 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 		url, ok := pathsToUrls[path]
 		if ok {
 			seen = true
-			http.Redirect(w, r, url, 303)
+			http.Redirect(w, r, url, http.StatusPermanentRedirect)
 		}
 	}
 	if seen {
 		return redir
-	} else {
-		return func(w http.ResponseWriter, r *http.Request) {
-			fallback.ServeHTTP(w, r)
-		}
+	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		fallback.ServeHTTP(w, r)
 	}
 }
 
@@ -46,6 +49,12 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 // See MapHandler to create a similar http.HandlerFunc via
 // a mapping of paths to urls.
 func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
-	//TODO: implement this
+	ymlMap := make(map[string]string)
+	err := yaml.Unmarshal(yml, &ymlMap)
+	if err != nil {
+		log.Fatalf("Error reading YAML: %v", err)
+		return nil, err
+	}
+	fmt.Println(ymlMap)
 	return nil, nil
 }

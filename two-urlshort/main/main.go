@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	//TODO: import the other package
+
+	"github.com/gophercises/urlshort"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 		"/urlshort-godoc": "https://godoc.org/github.com/gophercises/urlshort",
 		"/yaml-godoc":     "https://godoc.org/gopkg.in/yaml.v2",
 	}
+	// this returns the http.HandlerFunc
 	mapHandler := urlshort.MapHandler(pathsToUrls, mux)
 
 	//Build the YAMLHandler using the mapHandler as the fallback
